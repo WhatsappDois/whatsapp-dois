@@ -1,25 +1,26 @@
-import Message from "../model/Message.js";
-import Conversation from '../model/Conversation.js';
+const { encrypt, decrypt } = require('../utils/crypto');
+const Message = require('../model/Message');
 
+exports.sendMessage = async (req, res) => {
+  try {
+    const encryptedMessage = encrypt(req.body.message);
+    const newMessage = new Message({ ...req.body, message: encryptedMessage });
+    const savedMessage = await newMessage.save();
+    res.status(200).json(savedMessage);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 
-export const newMessage = async (request, response) => {
-    const newMessage = new Message(request.body);
-    try {
-        await newMessage.save();
-        await Conversation.findByIdAndUpdate(request.body.conversationId, { message: request.body.text });
-        response.status(200).json("Message has been sent successfully");
-    } catch (error) {
-        response.status(500).json(error);
-    }
-
-}
-
-export const getMessage = async (request, response) => {
-    try {
-        const messages = await Message.find({ conversationId: request.params.id });
-        response.status(200).json(messages);
-    } catch (error) {
-        response.status(500).json(error);
-    }
-
-}
+exports.getMessage = async (req, res) => {
+  try {
+    const messages = await Message.find({ conversationId: req.params.conversationId });
+    const decryptedMessages = messages.map((msg) => ({
+      ...msg._doc,
+      message: decrypt(msg.message),
+    }));
+    res.status(200).json(decryptedMessages);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
