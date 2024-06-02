@@ -16,7 +16,12 @@ const AccountProvider = ({children}) => {
     const socket = useRef();
 
     useEffect(() => {
-        socket.current = io('ws://localhost:9000');
+        try{
+            socket.current = io(`/indiano`);
+        } catch (erro) {
+            console.error(erro);
+            console.log('ixi')
+        }
     }, [])
 
     return (

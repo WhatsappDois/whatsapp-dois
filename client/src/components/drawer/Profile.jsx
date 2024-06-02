@@ -48,15 +48,15 @@ const Profile = () => {
                 <Image src={account.picture} alt="displaypicture" />
             </ImageContainer>
             <BoxWrapper>
-                <Typography>Your name</Typography>
+                <Typography>Seu nome</Typography>
                 <Typography>{account.name}</Typography>
             </BoxWrapper>
             <DescriptionContainer>
-                <Typography>This is not your username or pin. This name will be visible to your WhatsApp contacts.</Typography>
+                <Typography>Esse é o nome que ficará visível aos outros usuários</Typography>
             </DescriptionContainer>
             <BoxWrapper>
-                <Typography>About</Typography>
-                <Typography>Eat! Sleep! Code! Repeat</Typography>
+                <Typography>Sobre</Typography>
+                <Typography>Eu gosto de maçã</Typography>
             </BoxWrapper>
         </>
     )

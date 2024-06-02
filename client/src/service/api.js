@@ -1,7 +1,7 @@
   
 import axios from 'axios';
 
-const url = 'http://localhost:8000';
+const url = '/api';
 
 export const addUser = async (data) => {
     try {

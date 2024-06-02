@@ -7,7 +7,6 @@ import { jwtDecode } from "jwt-decode";
 
 import { addUser } from '../../service/api';
 import { AccountContext } from '../../context/AccountProvider';
-import { qrCodeImage } from '../../constants/data';
 
 const Component = styled(Box)`
     display: flex; 
@@ -16,12 +15,6 @@ const Component = styled(Box)`
 const Container = styled(Box)`
     padding: 56px 0 56px 56px;
 `;
-
-const QRCOde = styled('img')({
-    margin: '50px 0 0 50px',
-    height: 264,
-    width: 264
-});
 
 const Title = styled(Typography)`
     font-size: 26px;
@@ -54,26 +47,18 @@ const dialogStyle = {
 
 const LoginDialog = () => {
 
-    const { setAccount,showloginButton, setShowloginButton, setShowlogoutButton } = useContext(AccountContext);
+    const { setAccount,showloginButton, setShowloginButton } = useContext(AccountContext);
 
     const onLoginSuccess = async (res) => {
         let decoded = jwtDecode(res.credential);
         setAccount(decoded);
         setShowloginButton(false);
-        setShowlogoutButton(true);
         await addUser(decoded);
     };
 
     const onLoginFailure = (res) => {
         console.log('Login Failed:', res);
     };
-
-    // const onSignoutSuccess = () => {
-    //     alert("You have been logged out successfully");
-    //     console.clear();
-    //     setShowloginButton(true);
-    //     setShowlogoutButton(false);
-    // };
 
     return (
         <Dialog
@@ -84,15 +69,14 @@ const LoginDialog = () => {
         >
             <Component>
                 <Container>
-                    <Title>To use WhatsApp Dois on your computer:</Title>
+                    <Title>Para usar WhatsApp Dois no seu computador:</Title>
                     <StyledList>
-                        <ListItem>1. Open WhatsApp on your phone</ListItem>
-                        <ListItem>2. Tap Menu Settings and select WhatsApp Web</ListItem>
-                        <ListItem>3. Point your phone to this screen to capture the code</ListItem>
+                        <ListItem>1. Faça login com uma conta do Google</ListItem>
+                        <ListItem>2. Respeite os outros usuários</ListItem>
+                        <ListItem>3. Se divirta!</ListItem>
                     </StyledList>
                 </Container>
                 <Box style={{position:'relative'}}>
-                    <QRCOde src={qrCodeImage} alt="QR Code" />
                     <Box style={{position: 'absolute', top: '50%', transform: 'translateX(25%) translateY(-25%)'}}>
                         { showloginButton ?
                             <GoogleLogin

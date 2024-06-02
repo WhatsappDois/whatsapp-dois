@@ -46,8 +46,8 @@ const EmptyChat = () => {
             <Container>
                 <Image src={emptyChatImage} alt="empty" />
                 <Title>WhatsApp Web Dois</Title>
-                <SubTitle>Now send and receive messages without keeping your phone online.</SubTitle>
-                <SubTitle>Use WhatsApp Dois on up to 4 linked devices and 1 phone at the same time. </SubTitle>
+                <SubTitle>Está sozinho?</SubTitle>
+                <SubTitle>Chame amigos para conversar! </SubTitle>
                 <StyledDivider />
             </Container>
         </Component>
