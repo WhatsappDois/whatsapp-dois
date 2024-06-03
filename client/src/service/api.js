@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
-const url = 'http://localhost:8000';
+const url = '/api';
 
 const decryptionKey = 'testeCrypto123';
 
