@@ -60,8 +60,9 @@ const Conversation = ({ user }) => {
 
     useEffect(() => {
         const getConversationMessage = async() => {
+            const teste = decryptMessage(data.message)
             const data = await getConversation({ senderId: account.sub, receiverId: user.sub });
-            setMessage({ text: decryptMessage(data?.message), timestamp: data?.updatedAt });
+            setMessage({ text: teste, timestamp: data?.updatedAt });
         }
         getConversationMessage();
     }, [newMessageFlag]);
