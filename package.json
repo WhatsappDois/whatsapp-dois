@@ -1,0 +1,10 @@
+{
+  "name": "wpp2",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm start --prefix client\" \"npm start --prefix server\" \"npm start --prefix socket\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
