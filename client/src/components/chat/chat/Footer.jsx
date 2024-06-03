@@ -74,7 +74,7 @@ const Footer = ({ sendText, value, setValue, setFile, file, setImage }) => {
 
             <Search>
                 <InputField
-                    placeholder="Type a message"
+                    placeholder="Escreva uma mensagem"
                     inputProps={{ 'aria-label': 'search' }}
                     onChange={(e) => setValue(e.target.value)}
                     onKeyPress={(e) => sendText(e)}
