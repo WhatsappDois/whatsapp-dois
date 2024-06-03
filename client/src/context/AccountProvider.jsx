@@ -16,7 +16,7 @@ const AccountProvider = ({children}) => {
     const socket = useRef();
 
     useEffect(() => {
-        socket.current = io('/');
+        socket.current = io('ws://localhost:9000');
     }, [])
 
     return (

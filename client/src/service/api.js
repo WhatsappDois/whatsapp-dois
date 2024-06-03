@@ -1,7 +1,17 @@
-  
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
-const url = '/api';
+const url = 'http://localhost:8000';
+
+const decryptionKey = 'testeCrypto123';
+
+const decryptMessage = (messages) => {
+    messages.forEach(encryptedMessage => {
+        const bytes = CryptoJS.AES.decrypt(encryptedMessage.text, decryptionKey);
+        encryptedMessage.text = bytes.toString(CryptoJS.enc.Utf8);
+    });
+    return messages;
+};
 
 export const addUser = async (data) => {
     try {
@@ -41,7 +51,8 @@ export const getConversation = async (users) => {
 export const getMessages = async (id) => {
     try {
         let response = await axios.get(`${url}/message/get/${id}`);
-        return response.data
+        return decryptMessage(response.data);
+        console.log(response.data);
     } catch (error) {
         console.log('Error while calling getMessages API ', error);
     }

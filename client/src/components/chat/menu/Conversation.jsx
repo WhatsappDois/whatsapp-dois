@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 
+import CryptoJS from 'crypto-js';
+
 import { styled, Box, Typography } from "@mui/material";
 
 import { UserContext } from '../../../context/UserProvider';
@@ -44,15 +46,22 @@ const Text = styled(Typography)`
 const Conversation = ({ user }) => {
     const url = user.picture || emptyProfilePicture;
     
+    const decryptionKey = 'testeCrypto123';
+
     const { setPerson } = useContext(UserContext);
     const { account, newMessageFlag }  = useContext(AccountContext);
 
     const [message, setMessage] = useState({});
 
+    const decryptMessage = (data) => {
+        const bytes = CryptoJS.AES.decrypt(data, decryptionKey);
+        return bytes.toString(CryptoJS.enc.Utf8);
+    };
+
     useEffect(() => {
         const getConversationMessage = async() => {
             const data = await getConversation({ senderId: account.sub, receiverId: user.sub });
-            setMessage({ text: data?.message, timestamp: data?.updatedAt });
+            setMessage({ text: decryptMessage(data?.message), timestamp: data?.updatedAt });
         }
         getConversationMessage();
     }, [newMessageFlag]);
