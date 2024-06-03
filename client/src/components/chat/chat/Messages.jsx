@@ -46,10 +46,15 @@ const Messages = ({ person, conversation }) => {
 
     const { account, socket, newMessageFlag, setNewMessageFlag } = useContext(AccountContext);
 
+    const decryptMessage = (encryptedMessage) => {
+        const bytes = CryptoJS.AES.decrypt(encryptedMessage, decryptionKey);
+        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    };
+
     useEffect(() => {
         socket.current.on('getMessage', data => {
             setIncomingMessage({
-                ...data,
+                ...decryptMessage(data),
                 createdAt: Date.now()
             })
         })
@@ -58,6 +63,7 @@ const Messages = ({ person, conversation }) => {
     useEffect(() => {
         const getMessageDetails = async () => {
             let data = await getMessages(conversation?._id);
+            
             setMessages(data);
         }
         getMessageDetails();
@@ -75,40 +81,48 @@ const Messages = ({ person, conversation }) => {
 
     const receiverId = conversation?.members?.find(member => member !== account.sub);
     
+    const encryptionKey = 'testeCrypto123';
+
+    const encryptMessage = (message) => {
+        return CryptoJS.AES.encrypt(JSON.stringify(message), encryptionKey).toString();
+    };
+
     const sendText = async (e) => {
-        let code = e.keyCode || e.which;
-        if(!value) return;
+    let code = e.keyCode || e.which;
+    if (!value) return;
 
-        if(code === 13) { 
-            let message = {};
-            if (!file) {
-                message = {
-                    senderId: account.sub,
-                    receiverId: receiverId,
-                    conversationId: conversation._id,
-                    type: 'text',
-                    text: value
-                };
-            } else {
-                message = {
-                    senderId: account.sub,
-                    conversationId: conversation._id,
-                    receiverId: receiverId,
-                    type: 'file',
-                    text: image
-                };
-            }
+    if (code === 13) {
+        let message = {};
+        if (!file) {
+            message = {
+                senderId: account.sub,
+                receiverId: receiverId,
+                conversationId: conversation._id,
+                type: 'text',
+                text: value
+            };
+        } else {
+            message = {
+                senderId: account.sub,
+                conversationId: conversation._id,
+                receiverId: receiverId,
+                type: 'file',
+                text: image
+            };
+        }
 
-            socket.current.emit('sendMessage', message);
+        const encryptedMessage = encryptMessage(message);
 
-            await newMessages(message);
+        socket.current.emit('sendMessage', encryptedMessage);
 
-            setValue('');
-            setFile();
-            setImage('');
-            setNewMessageFlag(prev => !prev);
-        } 
+        await newMessages(encryptedMessage);
+
+        setValue('');
+        setFile();
+        setImage('');
+        setNewMessageFlag(prev => !prev);
     }
+};
 
     return (
         <Wrapper>
