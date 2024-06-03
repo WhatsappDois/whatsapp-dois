@@ -1,26 +1,43 @@
-const { encrypt, decrypt } = require('../utils/crypto');
-const Message = require('../model/Message');
+import Message from "../model/Message.js";
+import Conversation from '../model/Conversation.js';
 
-exports.sendMessage = async (req, res) => {
-  try {
-    const encryptedMessage = encrypt(req.body.message);
-    const newMessage = new Message({ ...req.body, message: encryptedMessage });
-    const savedMessage = await newMessage.save();
-    res.status(200).json(savedMessage);
-  } catch (err) {
-    res.status(500).json(err);
-  }
+
+import CryptoJS from 'crypto-js';
+
+
+const decryptionKey = 'testeCrypto123';
+
+const encryptMessage = (message) => {
+    return CryptoJS.AES.encrypt(JSON.stringify(message), decryptionKey ).toString();
 };
 
-exports.getMessage = async (req, res) => {
-  try {
-    const messages = await Message.find({ conversationId: req.params.conversationId });
-    const decryptedMessages = messages.map((msg) => ({
-      ...msg._doc,
-      message: decrypt(msg.message),
-    }));
-    res.status(200).json(decryptedMessages);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
+// const decryptMessage = (encryptedMessage) => {
+//     const bytes = CryptoJS.AES.decrypt(encryptedMessage.text, decryptionKey);
+//     encryptedMessage.text = bytes.toString(CryptoJS.enc.Utf8);
+// };
+
+export const newMessage = async (request, response) => {
+    console.log(request.body);    
+    try {
+        const newMessage = new Message(request.body);
+        await newMessage.save();
+        // decryptMessage(request.body);
+        await Conversation.findByIdAndUpdate(request.body.conversationId, { message: request.body.text });
+        response.status(200).json("Message has been sent successfully");
+    } catch (error) {
+        response.status(500).json(error);
+    }
+
+}
+
+export const getMessage = async (request, response) => {
+    try {
+        const messages = await Message.find({ conversationId: request.params.id });
+        // const encryptedMessage = encryptMessage(messages);
+        // console.log(messages
+        response.status(200).json(messages);
+    } catch (error) {
+        response.status(500).json(error);
+    }
+
+}
