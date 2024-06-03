@@ -1,12 +1,12 @@
 import Message from "../model/Message.js";
 import Conversation from '../model/Conversation.js';
+import CryptoJS from 'crypto-js';
 
 const decryptionKey = 'testeCrypto123';
 
 const encryptMessage = (message) => {
     return CryptoJS.AES.encrypt(JSON.stringify(message), encryptionKey).toString();
 };
-
 
 const decryptMessage = (encryptedMessage) => {
     const bytes = CryptoJS.AES.decrypt(encryptedMessage, decryptionKey);

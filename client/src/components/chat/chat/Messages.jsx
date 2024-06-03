@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Box, styled } from '@mui/material';
+import CryptoJS from 'crypto-js';
 
 import { io } from 'socket.io-client';
 
@@ -41,6 +42,8 @@ const Messages = ({ person, conversation }) => {
     const [value, setValue] = useState();
     const [file, setFile] = useState();
     const [image, setImage] = useState();
+    
+    const decryptionKey = 'testeCrypto123';
 
     const scrollRef = useRef();
 
