@@ -16,12 +16,7 @@ const AccountProvider = ({children}) => {
     const socket = useRef();
 
     useEffect(() => {
-        try{
-            socket.current = io(`/indiano`);
-        } catch (erro) {
-            console.error(erro);
-            console.log('ixi')
-        }
+        socket.current = io('/');
     }, [])
 
     return (
